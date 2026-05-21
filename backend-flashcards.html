@@ -282,19 +282,28 @@ function renderCategories(app) {
 
 function renderCard(app) {
   const card = state.deck[state.index];
-  const showTerm = state.flipped ? !card.showTerm : card.showTerm;
-  const text = showTerm ? card.term : card.definition;
-  const label = showTerm ? 'Term' : 'Definition';
+  // const showTerm = state.flipped ? !card.showTerm : card.showTerm;
+  // const text = showTerm ? card.term : card.definition;
+  // const label = showTerm ? 'Term' : 'Definition';
   const remaining = state.deck.length - state.index - 1;
 
   let html = '<div class="progress">'
     + '<span>Card ' + (state.index + 1) + ' of ' + state.deck.length + ' · ' + remaining + ' left</span>'
     + '<span class="cat-tag">' + escapeHtml(card.category) + '</span>'
     + '</div>';
-  html += '<div class="card' + (state.flipped ? ' flipped' : '') + '">'
-    + '<div class="face-label">' + label + '</div>'
-    + '<div class="face-content' + (showTerm ? ' is-term' : '') + '">' + escapeHtml(text) + '</div>'
-    + '</div>';
+  html += '<div class="card' + (state.flipped ? ' flipped' : '') + '">';
+
+  // always show term
+  html += '<div class="face-label">Term</div>'
+    + '<div class="face-content is-term">' + escapeHtml(card.term) + '</div>';
+
+  // conditionally show the definition
+  if (state.flipped) {
+    html += '<div class="face-label" style="border-top: 20px">Definition</div>'
+          + '<div class="face-content">' + escapeHtml(card.definition) + '</div>';
+  }
+
+  html += '</div>'; // end of <div class="card">
 
   if (!state.flipped) {
     html += '<div class="actions"><button id="flip" class="primary">Flip</button></div>';
